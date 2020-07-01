@@ -11,6 +11,14 @@
 
 ## INITENV +PATH PYTHONPATH %i/${PYTHON_LIB_SITE_PACKAGES} 
 
+%if "%{?pip_package_pack_command:set}" != "set"
+%define pip_package_pack_command tar -czf ${pip_package_srcfile} ${pip_package_dirname}
+%endif
+
+%if "%{?pip_package_unpack_command:set}" != "set"
+%define	pip_package_unpack_command tar -xzf ${pip_package_srcfile}
+%endif
+
 %if "%{?pip_name:set}" != "set"
 %define pip_name %(echo %n | cut -f2-10 -d-)
 %endif
