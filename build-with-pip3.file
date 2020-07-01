@@ -53,6 +53,31 @@ echo %{source_file}  > files.list
 %{?PipPostPrep:%PipPostPrep}
 %{?PipPreBuild:%PipPreBuild}
 
+%if "%{?NoAutoPatch:set}" != "set"
+if [ "%{?patches:%patches}%{?patchsrc:1}%{?patchsrc0:1}%{?patchsrc1:1}%{?patchsrc2:1}%{?patchsrc3:1}%{?patchsrc4:1}" != "" ] ; then
+  rm -rf cmsdist-patch-%{n} ; mkdir cmsdist-patch-%{n}
+  pushd cmsdist-patch-%{n}
+    pip_package_srcfile=../$(cat ../files.list)
+    %{pip_package_unpack_command}
+    pip_package_dirname=$(ls -d *)
+    pushd ${pip_package_dirname}
+      for pch in %{?patches:%patches} ; do
+        patch -p1 < ${pch}
+      done
+      %{?patchsrc:%patchsrc}
+      %{?patchsrc0:%patchsrc0}
+      %{?patchsrc1:%patchsrc1}
+      %{?patchsrc2:%patchsrc2}
+      %{?patchsrc3:%patchsrc3}
+      %{?patchsrc4:%patchsrc4}
+    popd
+    rm -f ${pip_package_srcfile}
+    %{pip_package_pack_command}
+  popd
+  rm -rf cmsdist-patch-%{n}
+fi
+%endif
+
 if [ $(cat files.list | wc -l) -eq 1 ] ; then
    export PIPFILE=`cat files.list`
    echo ${PIPFILE}
