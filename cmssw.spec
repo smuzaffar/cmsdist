@@ -1,11 +1,11 @@
-### RPM cms cmssw CMSSW_12_6_0_pre5
+### RPM cms cmssw CMSSW_12_6_0_pre5_G4VECGEOM
 
 Requires: cmssw-tool-conf
 
 %define runGlimpse      yes
 %define saveDeps        yes
 %define branch          master
-%define gitcommit       %{realversion}
+%define gitcommit       CMSSW_12_6_0_pre5
 # build with debug symbols, and package them in a separate rpm
 #subpackage debug disabledes
 
